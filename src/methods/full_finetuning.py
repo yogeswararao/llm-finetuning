@@ -1,4 +1,6 @@
 """
+Full Fine-tuning
+
 Full fine-tuning updates all model parameters during training. This approach trains the entire model
 end-to-end, typically achieving the best performance but requiring
 more computational resources and memory.

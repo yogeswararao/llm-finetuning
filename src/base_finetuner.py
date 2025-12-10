@@ -121,7 +121,7 @@ class BaseFineTuner:
                 total_loss += loss_value
             
             avg_loss = total_loss / len(train_loader)
-            print(f'Epoch {epoch+1} - Average Loss: {avg_loss:.4f}')
+            print(f'Epoch {epoch+1} - Training Loss: {avg_loss:.4f}')
             
             # Validation
             val_loss = self.validate(val_loader)
