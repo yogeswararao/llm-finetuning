@@ -74,6 +74,7 @@ class LoRAFAFineTuner(BaseFineTuner):
         if save_model:
             self.save_model('lora_fa')
         
+        print("\nEvaluating after fine-tuning...")
         self.evaluate(test_dataset)
         print("\nLoRA-FA fine-tuning completed!")
 
