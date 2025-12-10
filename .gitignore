@@ -1,2 +1,4 @@
 dist/
 llm_finetuning.egg-info
+__pycache__
+.ipynb_checkpoints
