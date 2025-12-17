@@ -7,7 +7,7 @@ from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 from src.utils.evaluation import (
     evaluate_model,
-    print_evaluation_results
+    print_metrics
 )
 from tqdm import tqdm
 import os
@@ -166,7 +166,7 @@ class BaseFineTuner:
             self.device
         )
         
-        print_evaluation_results(results)
+        print_metrics(results)
     
     def save_model(self, method_name):
         """

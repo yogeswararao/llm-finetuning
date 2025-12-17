@@ -3,7 +3,7 @@ Evaluation utilities for measuring model performance
 """
 import torch
 import numpy as np
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from tqdm import tqdm
 
 
@@ -63,14 +63,10 @@ def evaluate_model(model, data_loader, device):
         'labels': all_labels
     }
     
-    # Add confusion matrix for binary classification
-    if len(np.unique(all_labels)) == 2:
-        results['confusion_matrix'] = confusion_matrix(all_labels, all_predictions)
-    
     return results
 
 
-def print_evaluation_results(results):
+def print_metrics(results):
     """Print evaluation results in a formatted way"""
     print(f"\n{'='*60}")
     print("Evaluation Results")
@@ -83,9 +79,5 @@ def print_evaluation_results(results):
     print(f"Precision: {results['precision']:.4f}")
     print(f"Recall: {results['recall']:.4f}")
     print(f"F1 Score: {results['f1_score']:.4f}")
-    
-    if 'confusion_matrix' in results:
-        print(f"\nConfusion Matrix:")
-        print(results['confusion_matrix'])
     
     print(f"{'='*60}\n")
