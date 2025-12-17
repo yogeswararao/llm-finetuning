@@ -2,9 +2,9 @@
 
 A comprehensive collection of LLM fine-tuning methods with examples. Includes LoRA, QLoRA, AdaLoRA, Delta-LoRA, VeRA, Prompt Tuning, P-Tuning, and more. 
 
-## Medium Article
+## Blog post
 
-Check out the blog post for a high-level walk through: [10 Practical Ways to Fine-Tune an LLM](https://medium.com/@your-username/your-article-link)
+Check out the blog post for a high-level walk through: [10 Practical Ways to Fine-Tune an LLM]()
 
 ## Features
 
@@ -24,7 +24,7 @@ This project implements the following fine-tuning methods:
 ## Prerequisites
 
 - Python >= 3.13
-- [uv](https://github.com/astral-sh/uv) - Fast Python package installer and resolver
+- [uv](https://docs.astral.sh/uv/) - Python package manager
 
 ### Quick Setup
 
@@ -41,9 +41,8 @@ This project implements the following fine-tuning methods:
 
 ## Usage
 
-### Python Script
 
-You can use the fine-tuning methods in your Python code:
+Fine-tuning methods can be run as shown below:
 
 ```python
 from src.finetuner import LoRAFineTuner
@@ -53,7 +52,7 @@ lora = LoRAFineTuner()
 lora.run(save_model=True)
 ```
 
-### Interactive Notebook
+## Interactive Notebook
 
 For an interactive exploration of all fine-tuning methods, check out [`llm-finetuning.ipynb`](llm-finetuning.ipynb)
 
