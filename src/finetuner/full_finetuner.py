@@ -1,9 +1,9 @@
 """
 Full Fine-tuning
 
-Full fine-tuning updates all model parameters during training. This approach trains the entire model
-end-to-end, typically achieving the best performance but requiring
-more computational resources and memory.
+Full fine-tuning updates all model parameters during training. This approach trains the 
+entire model parameters end-to-end, typically achieving the best performance 
+but requiring more computational resources and memory.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from src.base_finetuner import BaseFineTuner
@@ -53,10 +53,11 @@ class FullFineTuner(BaseFineTuner):
 
         # Save model
         if save_model:
-            self.save_model('full_finetuning')
+            self.save_model('full_finetuner')
     
         # Evaluate after training
         print("\nEvaluating after fine-tuning...")
         self.evaluate(test_dataset)
     
         print("\nFull fine-tuning completed!")
+

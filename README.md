@@ -46,7 +46,7 @@ This project implements the following fine-tuning methods:
 You can use the fine-tuning methods in your Python code:
 
 ```python
-from src.methods import LoRAFineTuner
+from src.finetuner import LoRAFineTuner
 
 # Initialize and run LoRA fine-tuning
 lora = LoRAFineTuner()

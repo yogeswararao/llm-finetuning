@@ -1,15 +1,12 @@
 
-"""Top-level exports for tuning methods.
+"""Top-level exports for fine-tuning methods.
 
-This module re-exports the main tuner classes so callers can do::
+This module re-exports the main fine-tuner classes so callers can do::
 
-	from src.methods import FullFineTuner, LoRAFineTuner
-
-Use relative imports to avoid import-time side effects when the package
-is installed or used as a module.
+	from src.finetuner import FullFineTuner, LoRAFineTuner
 """
 
-from .full_finetuning import FullFineTuner
+from .full_finetuner import FullFineTuner
 from .adalora import AdaLoRAFineTuner
 from .delta_lora import DeltaLoRAFineTuner
 from .lora import LoRAFineTuner
