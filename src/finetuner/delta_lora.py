@@ -16,11 +16,11 @@ explicit delta computation.
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from torch.optim import AdamW
 from peft import LoraConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class DeltaLoRAFineTuner(BaseFineTuner):
+class DeltaLoRAFineTuner(CoreFineTuner):
     """
     Delta-LoRA fine-tuner implementation (approximation method).
     
@@ -142,8 +142,6 @@ class DeltaLoRAFineTuner(BaseFineTuner):
             self.save_model('delta_lora')
         
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nDelta-LoRA fine-tuning completed!")
 

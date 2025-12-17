@@ -8,11 +8,11 @@ are optimized across transformer layers.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PromptEncoderConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class PTuningFineTuner(BaseFineTuner):
+class PTuningFineTuner(CoreFineTuner):
     """
     P-Tuning fine-tuner implementation using PEFT's native PromptEncoderConfig.
     
@@ -107,8 +107,6 @@ class PTuningFineTuner(BaseFineTuner):
             self.save_model('p_tuning')
         
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nP-Tuning fine-tuning completed!")
 

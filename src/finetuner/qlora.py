@@ -16,14 +16,14 @@ Note: This implementation uses BitsAndBytesConfig for quantization
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 import torch
 import shutil
 import tempfile
 
 
-class QLoRAFineTuner(BaseFineTuner):
+class QLoRAFineTuner(CoreFineTuner):
     """
     QLoRA fine-tuner implementation.
     

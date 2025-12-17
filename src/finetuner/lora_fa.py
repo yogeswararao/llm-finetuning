@@ -7,11 +7,11 @@ by 50% compared to standard LoRA while maintaining competitive performance.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import LoraConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class LoRAFAFineTuner(BaseFineTuner):
+class LoRAFAFineTuner(CoreFineTuner):
     """
     LoRA-FA fine-tuner implementation.
     
@@ -74,7 +74,6 @@ class LoRAFAFineTuner(BaseFineTuner):
         if save_model:
             self.save_model('lora_fa')
         
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        print("\nLoRA-FA fine-tuning completed!")
 

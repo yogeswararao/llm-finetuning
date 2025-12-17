@@ -1,5 +1,5 @@
 """
-Reusable base finetuner class with common training and evaluation methods
+Reusable core finetuner class with common training and evaluation methods
 """
 import torch
 from torch.utils.data import DataLoader
@@ -13,9 +13,9 @@ from tqdm import tqdm
 import os
 
 
-class BaseFineTuner:
+class CoreFineTuner:
     """
-    Base class for fine-tuning with common training and evaluation methods
+    Core class for fine-tuning with common training and evaluation methods
     
     Subclasses should implement:
     - __init__: Initialize model and tokenizer
@@ -192,7 +192,7 @@ class BaseFineTuner:
             **model_kwargs: Additional arguments to pass to model loading
         
         Returns:
-            BaseFineTuner instance with loaded model and tokenizer
+            CoreFineTuner instance with loaded model and tokenizer
         """
         from transformers import AutoTokenizer, AutoModelForSequenceClassification
         from peft import PeftModel
@@ -230,3 +230,4 @@ class BaseFineTuner:
         
         print(f'Model loaded from {model_path}')
         return instance
+

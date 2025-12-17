@@ -8,11 +8,11 @@ adapter matrices and only trains two small scaling vectors (b and d) for each Lo
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import VeraConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class VeRAFineTuner(BaseFineTuner):
+class VeRAFineTuner(CoreFineTuner):
     """
     VeRA fine-tuner implementation using PEFT's native VeRAConfig.
     
@@ -81,9 +81,7 @@ class VeRAFineTuner(BaseFineTuner):
         if save_model:
             self.save_model('vera')
         
-        # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        # Evaluate the model
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nVeRA fine-tuning completed!")
 

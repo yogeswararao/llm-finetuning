@@ -6,11 +6,11 @@ entire model parameters end-to-end, typically achieving the best performance
 but requiring more computational resources and memory.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class FullFineTuner(BaseFineTuner):
+class FullFineTuner(CoreFineTuner):
     """
     Full fine-tuner implementation.
     

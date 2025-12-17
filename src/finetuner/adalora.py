@@ -8,11 +8,11 @@ allocating more capacity to important modules and less to less important ones.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import AdaLoraConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class AdaLoRAFineTuner(BaseFineTuner):
+class AdaLoRAFineTuner(CoreFineTuner):
     """
     AdaLoRA fine-tuner implementation.
     
@@ -113,8 +113,6 @@ class AdaLoRAFineTuner(BaseFineTuner):
             self.save_model('adalora')
         
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nAdaLoRA fine-tuning completed!")
 

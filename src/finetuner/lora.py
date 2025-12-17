@@ -8,11 +8,11 @@ layers, where the weight update is approximated as ΔW = BA.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import LoraConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class LoRAFineTuner(BaseFineTuner):
+class LoRAFineTuner(CoreFineTuner):
     """
     LoRA fine-tuner implementation.
     
@@ -77,7 +77,5 @@ class LoRAFineTuner(BaseFineTuner):
             self.save_model('lora')
         
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nLoRA fine-tuning completed!")

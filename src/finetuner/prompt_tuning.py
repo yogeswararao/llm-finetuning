@@ -7,11 +7,11 @@ that guide the model's behavior while keeping all base model weights frozen.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PromptTuningConfig, get_peft_model, TaskType
-from src.base_finetuner import BaseFineTuner
+from src.core_finetuner import CoreFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class PromptTuningFineTuner(BaseFineTuner):
+class PromptTuningFineTuner(CoreFineTuner):
     """
     Prompt Tuning fine-tuner implementation using PEFT's native PromptTuningConfig.
     
@@ -96,8 +96,6 @@ class PromptTuningFineTuner(BaseFineTuner):
             self.save_model('prompt_tuning')
         
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        
-        print("\nPrompt Tuning fine-tuning completed!")
 
