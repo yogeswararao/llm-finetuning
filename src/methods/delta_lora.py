@@ -1,10 +1,17 @@
 """
-Delta-LoRA Fine-tuning
+Delta-LoRA Fine-tuning (Approximation Method)
 
 Delta-LoRA is a variant of LoRA that updates both the LoRA adapters and the base
-model weights. Unlike standard LoRA which only trains the low-rank matrices,
-Delta-LoRA also makes base model weights trainable with a much smaller learning
-rate, allowing direct weight updates while maintaining parameter efficiency.
+model weights. Unlike standard LoRA which uses W' = W + BA, Delta-LoRA incorporates
+the difference between the product of low-rank matrices A and B in two consecutive
+training steps. The weight update is: W' = W + (A^(t+1)B^(t+1) - A^(t)B^(t)),
+where the delta (difference) of the low-rank product is added to the base weights.
+This allows direct updates to base model weights while maintaining parameter efficiency.
+
+This implementation uses an approximation method that makes base weights trainable
+with a much smaller learning rate (typically 100-1000x smaller than LoRA adapters).
+This approximates the delta mechanism through gradient-based updates rather than
+explicit delta computation.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from torch.optim import AdamW
@@ -15,11 +22,19 @@ from src.utils.data_loader import load_imdb_data
 
 class DeltaLoRAFineTuner(BaseFineTuner):
     """
-    Delta-LoRA fine-tuner implementation.
+    Delta-LoRA fine-tuner implementation (approximation method).
     
-    Applies LoRA adapters while also making base model weights trainable with
-    a much smaller learning rate. This combines the efficiency of LoRA with
-    the ability to directly update base weights.
+    This implementation approximates Delta-LoRA by making base weights trainable
+    with a much smaller learning rate, rather than explicitly computing the delta.
+    
+    Approximation approach:
+    - Base weights W are made trainable (unlike standard LoRA where they're frozen)
+    - LoRA adapters (A and B) use normal learning rate (e.g., 2e-4)
+    - Base weights W use a much smaller learning rate (e.g., 1e-6, 200x smaller)
+    - Both are updated via standard gradient descent
+    
+    This approximates the explicit delta mechanism: W' = W + (A^(t+1)B^(t+1) - A^(t)B^(t))
+    by allowing base weights to slowly adapt based on the changes in LoRA adapters.
     """
     
     def __init__(self, model_name='distilbert-base-uncased', num_labels=2,
@@ -46,11 +61,11 @@ class DeltaLoRAFineTuner(BaseFineTuner):
         # Apply LoRA
         model = get_peft_model(base_model, lora_config)
         
-        # Delta-LoRA: Make base model weights trainable
         # In standard LoRA, base weights are frozen; here we enable them
+        # to approximate the delta updates via gradient descent
         for name, param in model.named_parameters():
             if 'lora' not in name.lower() and not param.requires_grad:
-                # Make base weights trainable for delta updates
+                # Make base weights trainable to receive delta updates
                 param.requires_grad = True
         
         # Initialize base class
@@ -72,7 +87,8 @@ class DeltaLoRAFineTuner(BaseFineTuner):
             Optimizer instance with separate parameter groups
         """
         # Use provided values if available, otherwise compute defaults
-        # Defaults: base_lr is much smaller (typically 100-1000x smaller)
+        # Approximation: base_lr is much smaller (typically 100-1000x smaller)
+        # This slow update approximates the explicit delta mechanism
         lora_lr = kwargs.get('lora_lr', learning_rate)
         base_lr = kwargs.get('base_lr', learning_rate / 200)  # 200x smaller by default
         
@@ -104,15 +120,17 @@ class DeltaLoRAFineTuner(BaseFineTuner):
         )
         
         # Train using base class method with custom learning rates
-        # Note: Delta-LoRA uses different learning rates for LoRA adapters and base weights
-        # Base weights use a much smaller learning rate (typically 100-1000x smaller)
-        print("\nStarting Delta-LoRA training...")
+        # Note: This approximation method uses different learning rates for LoRA adapters
+        # and base weights. Base weights use a much smaller learning rate (typically
+        # 100-1000x smaller) to approximate the explicit delta mechanism without
+        # computing the delta explicitly.
+        print("\nStarting Delta-LoRA training (approximation method)...")
         self.train(
             train_dataset=train_dataset,
             val_dataset=val_dataset,
             epochs=3,
             batch_size=16,
-            learning_rate=2e-4,  # Base LR (used for LoRA adapters)
+            learning_rate=2e-4,  # Default LR (used for LoRA adapters)
             optimizer_kwargs={
                 'lora_lr': 2e-4,  # Learning rate for LoRA adapters
                 'base_lr': 1e-6   # Much smaller LR for base model weights (200x smaller)

@@ -1,10 +1,10 @@
 # LLM Fine-tuning
 
-A collection of LLM fine-tuning methods, including LoRA, QLoRA, AdaLoRA, and more.
+A comprehensive collection of LLM fine-tuning methods with examples. Includes LoRA, QLoRA, AdaLoRA, Delta-LoRA, VeRA, Prompt Tuning, P-Tuning, and more. 
 
 ## Medium Article
 
-Check out the Medium article for a high level walk through: [Link to Medium Article](https://medium.com/@your-username/your-article-link)
+Check out the blog post for a high-level walk through: [10 Practical Ways to Fine-Tune an LLM](https://medium.com/@your-username/your-article-link)
 
 ## Features
 
@@ -19,7 +19,7 @@ This project implements the following fine-tuning methods:
 - **VeRA**: Vector-based Random Matrix Adaptation
 - **QLoRA**: LoRA with 4-bit quantization for memory efficiency
 - **Prompt Tuning**: Learnable prompt tokens
-- **P-Tuning v2**: Advanced prompt tuning with encoder
+- **P-Tuning**: Prompt tuning with encoder
 
 ## Prerequisites
 
@@ -41,38 +41,38 @@ This project implements the following fine-tuning methods:
 
 ## Usage
 
-### Running Fine-tuning Methods
+### Python Script
 
-You can run any of the fine-tuning methods directly. For example:
+You can use the fine-tuning methods in your Python code:
 
-```bash
-python -m src.methods.lora
+```python
+from src.methods import LoRAFineTuner
+
+# Initialize and run LoRA fine-tuning
+lora = LoRAFineTuner()
+lora.run(save_model=True)
 ```
 
 ### Interactive Notebook
 
-For an interactive exploration of all fine-tuning methods, check out the Jupyter notebook:
-
-- [`llm-finetuning.ipynb`](llm-finetuning.ipynb) - Interactive notebook with examples and comparisons of all fine-tuning methods
+For an interactive exploration of all fine-tuning methods, check out [`llm-finetuning.ipynb`](llm-finetuning.ipynb)
 
 ## Results Comparison
 
-The following table compares the performance of different fine-tuning methods on the IMDB sentiment classification task:
+Performance of different fine-tuning methods for the IMDb sentiment classification task:
 
 | Method | Accuracy | Trainable Params | % of Total Params |
 |--------|----------|-----------------|------------|
-| Full Fine-tuning | - | - | 100% |
-| LoRA | - | - | ~0.1% |
-| QLoRA | - | - | ~0.1% |
-| AdaLoRA | - | - | ~0.1% |
-| LoRA+ | - | - | ~0.1% |
-| LoRA-FA | - | - | ~0.05% |
-| Delta-LoRA | - | - | ~0.1% + base |
-| VeRA | - | - | ~0.01% |
-| Prompt Tuning | - | - | ~0.01% |
-| P-Tuning v2 | - | - | ~0.01% |
-
-*Note: Results are based on training with DistilBERT-base-uncased on the IMDB dataset. Actual values will be updated after running experiments.*
+| Full Fine-tuning | 93.26% | ~68M | 100% |
+| LoRA | 92.50% | ~887k | 1.3% |
+| LoRA-FA | 91.48% | ~739k | ~1% |
+| LoRA+ | 92.84% | ~887k | ~1.3% |
+| Delta-LoRA (Approximation) | 92.55% | ~68M | 100% |
+| AdaLoRA | 91.08% | ~1M | ~1.5% |
+| QLoRA | 92.58% | ~296k | ~0.44% |
+| VeRA | 91.02% | ~617k | ~0.9% |
+| Prompt Tuning | 85.88% | ~607k | ~0.89% |
+| P-Tuning | 88.94% | ~2.3M | ~3.43% |
 
 
 ## License

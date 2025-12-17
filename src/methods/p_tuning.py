@@ -1,10 +1,10 @@
 """
-P-Tuning v2 Fine-tuning
+P-Tuning Fine-tuning
 
-P-Tuning v2 is an advanced prompt tuning method that uses deep prompt optimization
-with a prompt encoder. Unlike simple prompt tuning which uses learnable embeddings
-directly, P-Tuning v2 uses an MLP encoder to generate prompt representations that
-are optimized across all transformer layers.
+P-Tuning is a prompt tuning method that uses a prompt encoder (MLP) to generate
+prompt representations. Unlike simple prompt tuning which uses learnable embeddings
+directly, P-Tuning uses an MLP encoder to generate prompt representations that
+are optimized across transformer layers.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PromptEncoderConfig, get_peft_model, TaskType
@@ -12,16 +12,17 @@ from src.base_finetuner import BaseFineTuner
 from src.utils.data_loader import load_imdb_data
 
 
-class PTuningV2FineTuner(BaseFineTuner):
+class PTuningFineTuner(BaseFineTuner):
     """
-    P-Tuning v2 fine-tuner implementation using PEFT's native PromptEncoderConfig.
+    P-Tuning fine-tuner implementation using PEFT's native PromptEncoderConfig.
     
-    P-Tuning v2 implements:
+    P-Tuning implements:
     1. Prompt encoder (MLP) that generates prompt representations
-    2. Deep prompt optimization across all transformer layers
+    2. Deep prompt optimization across transformer layers
     3. Virtual tokens prepended to input sequences
+    4. Base model weights remain completely frozen
     
-    Unlike simple prompt tuning, P-Tuning v2 uses an encoder to generate prompts,
+    Unlike simple prompt tuning, P-Tuning uses an encoder to generate prompts,
     allowing for more complex prompt representations and better performance.
     """
     
@@ -47,8 +48,8 @@ class PTuningV2FineTuner(BaseFineTuner):
         if encoder_hidden_size is None:
             encoder_hidden_size = hidden_size
         
-        # Configure P-Tuning v2 using PEFT's native PromptEncoderConfig
-        # P-Tuning v2 uses a prompt encoder (MLP) to generate prompt representations
+        # Configure P-Tuning using PEFT's native PromptEncoderConfig
+        # P-Tuning uses a prompt encoder (MLP) to generate prompt representations
         # The encoder takes virtual token embeddings and produces optimized prompts
         # Required parameters:
         # - num_layers: Number of transformer layers in the model
@@ -66,7 +67,7 @@ class PTuningV2FineTuner(BaseFineTuner):
             encoder_reparameterization_type="MLP"  # Use MLP for reparameterization
         )
         
-        # Apply P-Tuning v2
+        # Apply P-Tuning
         model = get_peft_model(base_model, p_tuning_config)
         
         # Initialize base class
@@ -76,22 +77,9 @@ class PTuningV2FineTuner(BaseFineTuner):
         self.model.print_trainable_parameters()
         self.num_virtual_tokens = num_virtual_tokens
     
-    def _prepare_batch(self, batch):
-        """
-        Prepare batch for model input.
-        P-Tuning v2 handles attention mask extension internally when it creates inputs_embeds.
-        We just need to pass the original input_ids and attention_mask.
-        The max_length is already reduced to account for virtual tokens in run().
-        """
-        return {
-            'input_ids': batch['input_ids'].to(self.device),
-            'attention_mask': batch['attention_mask'].to(self.device),
-            'labels': batch['labels'].to(self.device)
-        }
-    
     def run(self, save_model=False):
         print("=" * 60)
-        print("P-Tuning v2 Fine-tuning")
+        print("P-Tuning Fine-tuning")
         print("=" * 60)
         
         print("\nLoading IMDB dataset...")
@@ -104,8 +92,8 @@ class PTuningV2FineTuner(BaseFineTuner):
         )
         
         # Train using base class method
-        # Note: P-Tuning v2 only trains the prompt encoder, keeping base model frozen
-        print("\nStarting P-Tuning v2 training...")
+        # Note: P-Tuning only trains the prompt encoder, keeping base model frozen
+        print("\nStarting P-Tuning training...")
         self.train(
             train_dataset=train_dataset,
             val_dataset=val_dataset,
@@ -116,11 +104,11 @@ class PTuningV2FineTuner(BaseFineTuner):
         
         # Save model
         if save_model:
-            self.save_model('p_tuning_v2')
+            self.save_model('p_tuning')
         
         # Evaluate after training
         print("\nEvaluating after fine-tuning...")
         self.evaluate(test_dataset)
         
-        print("\nP-Tuning v2 fine-tuning completed!")
+        print("\nP-Tuning fine-tuning completed!")
 

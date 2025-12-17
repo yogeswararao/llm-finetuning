@@ -5,6 +5,14 @@ QLoRA combines 4-bit quantization with LoRA to enable memory-efficient
 fine-tuning of large language models. The base model weights are quantized
 to 4-bit precision using NF4 quantization, while LoRA adapters remain in
 full precision for effective training.
+
+Note: This implementation uses BitsAndBytesConfig for quantization
+- BitsAndBytesConfig (bitsandbytes library) has architecture limitations:
+  * Primarily supports x86_64 (Intel/AMD) Linux systems
+  * Does NOT work on ARM architectures (Apple Silicon M1/M2/M3, ARM-based Linux)
+  * Limited or no support on Windows
+  * Requires CUDA for GPU acceleration (NVIDIA GPUs only)
+- If running on unsupported architectures, this implementation will fail.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
@@ -27,7 +35,7 @@ class QLoRAFineTuner(BaseFineTuner):
                  r=8, lora_alpha=16, lora_dropout=0.1):
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         
-        # Use checkpointing approach to work around quantization issues with encoder-only models
+        # Checkpointing approach to work around quantization issues with encoder-only models
         # 1. First load model in full precision with classification head
         # 2. Save as checkpoint
         # 3. Reload checkpoint with quantization

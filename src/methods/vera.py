@@ -1,11 +1,10 @@
 """
 VeRA (Vector-based Random Matrix Adaptation) Fine-tuning
 
-VeRA is a variant of LoRA that uses shared random matrices (frozen) across all
-tasks and learns only task-specific vectors. This is extremely parameter-efficient,
-requiring only ~0.1% of LoRA's parameters while achieving competitive performance.
-Unlike standard LoRA where both A and B matrices are trainable, VeRA freezes
-these matrices and only trains small scaling vectors (d) for each LoRA module.
+VeRA is a variant of LoRA that uses shared random adapter matrices across all
+tasks and learns only task-specific vectors. This is extremely parameter-efficient. 
+Unlike standard LoRA where both A and B matrices are trainable, VeRA freezes these 
+adapter matrices and only trains two small scaling vectors (b and d) for each LoRA module.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import VeraConfig, get_peft_model, TaskType
@@ -18,18 +17,10 @@ class VeRAFineTuner(BaseFineTuner):
     VeRA fine-tuner implementation using PEFT's native VeRAConfig.
     
     VeRA (Vector-based Random Matrix Adaptation) implements:
-    1. Freezing A and B matrices (shared random matrices, vera_A and vera_B)
-    2. Training only two scaling vectors per module:
-       - lambda_d: size r (scales rank dimension)
-       - lambda_b: size out_features (scales output)
-    3. Forward pass: W' = W + lambda_b * (lambda_d * (x @ A) @ B)
-    
-    Each module gets only two trainable vectors (lambda_d + lambda_b),
-    making this extremely parameter-efficient (~0.1% of LoRA parameters).
-    
-    Key difference from LoRA: VeRA can use much higher ranks (default r=256)
-    because only two vectors are trainable, not the full A and B matrices.
-    This allows higher capacity with similar parameter count.
+    1. Freezes A and B matrices (shared random matrices, vera_A and vera_B)
+    2. Each module gets only two trainable vectors (d and b)
+    3. Forward pass: W' = W + (b . B) @ (d . A)
+    4. Uses much higher rank (e.g., r=256) because only two vectors are trainable.
     """
     
     def __init__(self, model_name='distilbert-base-uncased', num_labels=2,
@@ -45,24 +36,14 @@ class VeRAFineTuner(BaseFineTuner):
         )
         
         # Configure VeRA using PEFT's native VeRAConfig
-        # VeRA implements: W' = W + lambda_b * (lambda_d * (x @ A) @ B)
-        # Where:
-        # - A and B are frozen shared random matrices (vera_A, vera_B)
-        # - lambda_d is trainable vector (size r) - scales rank dimension
-        # - lambda_b is trainable vector (size out_features) - scales output
-        # Note: VeRA can use much higher ranks than LoRA because:
-        # - Only two vectors are trainable per module (lambda_d + lambda_b)
-        # - A and B matrices are frozen (shared random matrices)
-        # - Trainable params ≈ r + out_features, not 2 * r * hidden_size like LoRA
-        # Default r=256 is recommended for VeRA (vs r=8-32 for LoRA)
         vera_config = VeraConfig(
             task_type=TaskType.SEQ_CLS,
             r=r,                      # Rank (default 256, higher than LoRA)
             target_modules=['q_lin', 'v_lin', 'k_lin', 'out_lin'],
-            save_projection=save_projection,  # Save projection matrices in checkpoint
-            projection_prng_key=projection_prng_key,  # PRNG key (default 0) to regenerate matrices if save_projection=False
-            vera_dropout=vera_dropout,  # Dropout probability for VeRA layers (default 0.0)
-            d_initial=d_initial  # Initial value for lambda_d vector (default 0.1, small values recommended)
+            save_projection=save_projection, 
+            projection_prng_key=projection_prng_key, 
+            vera_dropout=vera_dropout,
+            d_initial=d_initial
         )
         
         # Apply VeRA
@@ -85,16 +66,15 @@ class VeRAFineTuner(BaseFineTuner):
         )
         
         # Train using base class method
-        # Note: VeRA uses higher learning rate for scaling vectors (lambda_d, lambda_b)
+        # Uses higher learning rate because only two scaling vectors per module are trainable (d and b)
         # A and B matrices are frozen (shared random matrices)
-        # Only two vectors are trainable per module: lambda_d (size r) and lambda_b (size out_features)
         print("\nStarting VeRA training...")
         self.train(
             train_dataset=train_dataset,
             val_dataset=val_dataset,
             epochs=3,
             batch_size=16,
-            learning_rate=1e-3  # Higher LR for vectors (only trainable params)
+            learning_rate=1e-3 
         )
         
         # Save model

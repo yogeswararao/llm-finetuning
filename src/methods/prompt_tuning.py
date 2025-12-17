@@ -2,10 +2,8 @@
 Prompt Tuning Fine-tuning
 
 Prompt Tuning is a parameter-efficient fine-tuning method that adds learnable
-prompt tokens to the input sequences. Unlike Prefix Tuning (which requires
-decoder models), Prompt Tuning works with encoder-only models like BERT and
-DistilBERT. It prepends trainable prompt embeddings that guide the model's
-behavior while keeping all base model weights frozen.
+prompt tokens to the input sequences. Prompt Tuning prepends trainable prompt embeddings
+that guide the model's behavior while keeping all base model weights frozen.
 """
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PromptTuningConfig, get_peft_model, TaskType
@@ -21,11 +19,9 @@ class PromptTuningFineTuner(BaseFineTuner):
     1. Learnable prompt tokens prepended to input sequences
     2. Prompt tokens guide model behavior without modifying base weights
     3. Base model weights remain completely frozen
-    4. Works with encoder-only models (unlike Prefix Tuning)
     
-    Prompt Tuning is simpler than P-Tuning v2 as it uses learnable embeddings
-    directly without an encoder, making it more parameter-efficient but typically
-    less performant than P-Tuning v2.
+    Prompt Tuning uses learnable embeddings directly, making it highly
+    parameter-efficient with only the prompt token embeddings being trainable.
     """
     
     def __init__(self, model_name='distilbert-base-uncased', num_labels=2,

@@ -15,7 +15,7 @@ from .delta_lora import DeltaLoRAFineTuner
 from .lora import LoRAFineTuner
 from .lora_fa import LoRAFAFineTuner
 from .lora_plus import LoRAPlusFineTuner
-from .p_tuning_v2 import PTuningV2FineTuner
+from .p_tuning import PTuningFineTuner
 from .prompt_tuning import PromptTuningFineTuner
 from .qlora import QLoRAFineTuner
 from .vera import VeRAFineTuner
@@ -27,7 +27,7 @@ __all__ = [
 	"LoRAFineTuner",
 	"LoRAFAFineTuner",
 	"LoRAPlusFineTuner",
-	"PTuningV2FineTuner",
+	"PTuningFineTuner",
 	"PromptTuningFineTuner",
 	"QLoRAFineTuner",
 	"VeRAFineTuner",
