@@ -56,8 +56,6 @@ class FullFineTuner(CoreFineTuner):
             self.save_model('full_finetuner')
     
         # Evaluate after training
-        print("\nEvaluating after fine-tuning...")
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-    
-        print("\nFull fine-tuning completed!")
 
