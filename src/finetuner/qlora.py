@@ -118,7 +118,7 @@ class QLoRAFineTuner(CoreFineTuner):
         if save_model:
             self.save_model('qlora')
         
-        print("\nEvaluating after fine-tuning...")
+        # Evaluate the model
+        print("\nEvaluating the model...")
         self.evaluate(test_dataset)
-        print("\nQLoRA fine-tuning completed!")
 

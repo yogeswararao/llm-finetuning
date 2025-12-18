@@ -106,7 +106,7 @@ class PTuningFineTuner(CoreFineTuner):
         if save_model:
             self.save_model('p_tuning')
         
-        # Evaluate after training
+        # Evaluate the model
         print("\nEvaluating the model...")
         self.evaluate(test_dataset)
 
