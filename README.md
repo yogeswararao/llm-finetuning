@@ -62,16 +62,16 @@ Performance of different fine-tuning methods for the IMDb sentiment classificati
 
 | Method | Accuracy | Trainable Params | % of Total Params |
 |--------|----------|-----------------|------------|
-| Full Fine-tuning | 93.26% | ~68M | 100% |
-| LoRA | 92.50% | ~887k | 1.3% |
-| LoRA-FA | 91.48% | ~739k | ~1% |
-| LoRA+ | 92.84% | ~887k | ~1.3% |
-| Delta-LoRA (Approximation) | 92.55% | ~68M | 100% |
-| AdaLoRA | 91.08% | ~1M | ~1.5% |
-| QLoRA | 92.58% | ~296k | ~0.44% |
-| VeRA | 91.02% | ~617k | ~0.9% |
-| Prompt Tuning | 85.88% | ~607k | ~0.89% |
-| P-Tuning | 88.94% | ~2.3M | ~3.43% |
+| Full Fine-tuning | 93.32% | ~68M | 100% |
+| LoRA | 92.62% | ~887k | 1.3% |
+| LoRA-FA | 91.20% | ~739k | ~1% |
+| LoRA+ | 92.80% | ~887k | ~1.3% |
+| Delta-LoRA (Approximation) | 92.31% | ~68M | 100% |
+| AdaLoRA | 91.10% | ~1M | ~1.52% |
+| QLoRA | 92.56% | ~296k | ~0.44% |
+| VeRA | 91.02% | ~617k | ~0.91% |
+| Prompt Tuning | 85.22% | ~607k | ~0.89% |
+| P-Tuning | 89.96% | ~2.3M | ~3.43% |
 
 
 ## License
