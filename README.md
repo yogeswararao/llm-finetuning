@@ -4,7 +4,7 @@ A comprehensive collection of LLM fine-tuning methods with examples. Includes Lo
 
 ## Blog post
 
-Check out the blog post for a high-level walk through: [10 Practical Ways to Fine-Tune an LLM]()
+Check out the blog post for a high-level walk through: [10 Practical Ways to Fine-Tune an LLM](https://medium.com/@speaktoyogi/10-practical-ways-to-fine-tune-an-llm-e0d2eaf86d24)
 
 ## Features
 
@@ -52,10 +52,9 @@ lora = LoRAFineTuner()
 lora.run(save_model=True)
 ```
 
-## Interactive Notebook
+Check out [`llm-finetuning.ipynb`](llm-finetuning.ipynb) for all the runs and the results
 
-For an interactive exploration of all fine-tuning methods, check out [`llm-finetuning.ipynb`](llm-finetuning.ipynb)
-
+ 
 ## Results Comparison
 
 Performance of different fine-tuning methods for the IMDb sentiment classification task:
